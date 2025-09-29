@@ -28,9 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('catalog/', include('catalog.urls', namespace='catalog')),  # Каталог на /catalog/
     path("orders/", include("orders.urls", namespace="orders")),
-    path("login/", auth_views.LoginView.as_view(
-    template_name="registration/login.html"  # правильный путь к шаблону
-), name="login"),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path("logout/", auth_views.LogoutView.as_view(next_page="home"), name="logout"),
     path("payments/", include("payments.urls", namespace="payments")),
     path("accounts/", include("accounts.urls", namespace="accounts")),
