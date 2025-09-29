@@ -57,12 +57,12 @@ ROOT_URLCONF = 'shop.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-         'DIRS': [BASE_DIR / "templates"],  # <-- добавь эту строку
-        'APP_DIRS': True,
+        'DIRS': [BASE_DIR / "templates"],  # <-- указывает на папку templates
+        'APP_DIRS': True,                  # <-- ищет шаблоны внутри apps
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request',  # важно для LoginView
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
