@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+{% block title %}Главная - Огонь Жизни{% endblock %}
+
+{% block content %}
+<style>
+    /* === ОСНОВНЫЕ СТИЛИ === */
+    .hero-section {
+        background: linear-gradient(135deg, #fff6e9 0%, #ffedd1 100%);
+        padding: 5rem 1rem;
+        text-align: center;
+        border-radius: 16px;
+        margin: 2rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, #ffb347 0%, transparent 70%);
+        opacity: 0.3;
+        border-radius: 50%;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: #ff6a00;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.5px;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        color: #666;
+        margin-bottom: 2.5rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+
+    .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #ff6a00 0%, #ff8c00 100%);
+        color: white !important;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 106, 0, 0.3);
+        border: none;
+        cursor: pointer;
+    }
+
+    .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 106, 0, 0.4);
+        color: white !important;
+    }
+
+    /* === СЕКЦИИ === */
+    .section {
+        padding: 4rem 0;
+        text-align: center;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #ff6a00, #ffb347);
+        margin: 1rem auto;
+        border-radius: 2px;
+    }
+
+    /* === КАРТОЧКИ === */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .feature-card {
+        background: white;
+        padding: 2.5rem 2rem;
+        border-radius: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid #ffe4cc;
+        box-shadow: 0 4px 20px rgba(255, 165, 0, 0.08);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(255, 165, 0, 0.15);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        color: #ff6a00;
+        background: linear-gradient(135deg, #fff0e0 0%, #ffe4cc 100%);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .feature-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .feature-text {
+        color: #666;
+        line-height: 1.6;
+        font-size: 1rem;
+    }
+
+    /* === КАТЕГОРИИ === */
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .category-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid #ffe4cc;
+    }
+
+    .category-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 25px rgba(255, 165, 0, 0.1);
+    }
+
+    /* === ОТЗЫВЫ === */
+    .reviews-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .review-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        text-align: left;
+        border: 1px solid #ffe4cc;
+        position: relative;
+    }
+
+    .review-card::before {
+        content: '"';
+        font-size: 4rem;
+        color: #ffe4cc;
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        line-height: 1;
+        font-family: serif;
+    }
+
+    .review-text {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        padding-left: 2rem;
+        font-style: italic;
+    }
+
+    .review-author {
+        color: #ff6a00;
+        font-weight: 600;
+        text-align: right;
+    }
+
+    /* === АДАПТИВНОСТЬ === */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- ГЕРОЙ-СЕКЦИЯ -->
+<section class="hero-section">
+    <div class="container">
+        <h1 class="hero-title">Зажгите свой уют</h1>
+        <p class="hero-subtitle">Натуральные свечи ручной работы, которые наполнят ваш дом теплом, светом и неповторимыми ароматами</p>
+        <a href="/catalog/" class="cta-button">Смотреть коллекцию</a>
+    </div>
+</section>
+
+<!-- ПРЕИМУЩЕСТВА -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Почему выбирают наши свечи</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🕯️</div>
+                <h3 class="feature-title">Натуральный воск</h3>
+                <p class="feature-text">Используем только соевый и кокосовый воск без парафина и вредных добавок</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌸</div>
+                <h3 class="feature-title">Натуральные ароматы</h3>
+                <p class="feature-text">Эфирные масла и натуральные отдушки создают неповторимую атмосферу</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✋</div>
+                <h3 class="feature-title">Ручная работа</h3>
+                <p class="feature-text">Каждая свеча создается с любовью и вниманием к деталям</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- КАТЕГОРИИ -->
+<section class="section" style="background: linear-gradient(135deg, #fffaf0 0%, #fff5e6 100%); border-radius: 16px;">
+    <div class="container">
+        <h2 class="section-title">Наши коллекции</h2>
+        <div class="categories-grid">
+            <div class="category-card">
+                <h3 class="feature-title">🍃 Ароматические</h3>
+                <p class="feature-text">Свечи с натуральными эфирными маслами для ароматерапии</p>
+            </div>
+            <div class="category-card">
+                <h3 class="feature-title">🎁 Подарочные наборы</h3>
+                <p class="feature-text">Идеальные комплекты для особых occasions</p>
+            </div>
+            <div class="category-card">
+                <h3 class="feature-title">🏺 Декоративные</h3>
+                <p class="feature-text">Свечи в красивых подсвечниках и уникальных сосудах</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ОТЗЫВЫ -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Что говорят наши клиенты</h2>
+        <div class="reviews-grid">
+            <div class="review-card">
+                <p class="review-text">Аромат вашей лавандовой свечи просто божественный! Дом наполняется уютом и спокойствием. Горят ровно и долго, что очень радует.</p>
+                <p class="review-author">— Елена, Москва</p>
+            </div>
+            <div class="review-card">
+                <p class="review-text">Заказывала набор свечей в подарок — осталась в восторге и я, и подруга! Упаковка шикарная, ароматы тонкие и ненавязчивые. Обязательно буду заказывать ещё!</p>
+                <p class="review-author">— Анна, Санкт-Петербург</p>
+            </div>
+            <div class="review-card">
+                <p class="review-text">Покупаю уже не в первый раз. Качество на высоте: не коптят, горят долго, аромат чувствуется во всей комнате. Любимый — ванильный с корицей!</p>
+                <p class="review-author">— Мария, Сочи</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA ВТОРАЯ -->
+<section class="section">
+    <div class="container" style="text-align: center;">
+        <h2 class="section-title">Готовы создать атмосферу уюта?</h2>
+        <p class="hero-subtitle">Выберите свою идеальную свечу из нашей коллекции</p>
+        <a href="/catalog/" class="cta-button">Перейти в каталог</a>
+    </div>
+</section>
+{% endblock %}

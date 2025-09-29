@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+{% block title %}Мои заказы{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Мои заказы</h2>
+
+    <ul class="nav nav-tabs" id="ordersTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button">
+                Текущие
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="archived-tab" data-bs-toggle="tab" data-bs-target="#archived" type="button">
+                Архивные
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="ordersTabsContent">
+        <!-- Текущие заказы -->
+        <div class="tab-pane fade show active" id="active" role="tabpanel">
+            {% if active_orders %}
+                {% for order in active_orders %}
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Заказ №{{ order.id }} от {{ order.created|date:"d.m.Y H:i" }}
+                            <span class="badge 
+                                {% if order.status == 'new' %} bg-primary
+                                {% elif order.status == 'processing' %} bg-info text-dark
+                                {% elif order.status == 'shipped' %} bg-warning text-dark
+                                {% endif %}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                {% for item in order.items.all %}
+                                    <li>
+                                        {{ item.product.name }} — {{ item.quantity }} шт. × {{ item.price }} ₽ =
+                                        {{ item.get_cost }} ₽
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            
+                            <!-- БЛОК С ИТОГАМИ СО СКИДКОЙ -->
+                            <div class="order-summary mt-3 p-3 bg-light rounded">
+                                <div class="summary-row d-flex justify-content-between">
+                                    <span>Общая стоимость:</span>
+                                    <span>{{ order.get_total_cost }} ₽</span>
+                                </div>
+                                
+                                {% if order.discount %}
+                                <div class="summary-row d-flex justify-content-between text-success">
+                                    <span>Скидка по промокоду ({{ order.discount }}%):</span>
+                                    <span>-{{ order.get_discount_amount }} ₽</span>
+                                </div>
+                                {% endif %}
+                                
+                                <div class="summary-row d-flex justify-content-between total fw-bold mt-2 pt-2 border-top">
+                                    <span>Итого:</span>
+                                    <span>
+                                        {% if order.total_with_discount %}
+                                            {{ order.total_with_discount }} ₽
+                                        {% else %}
+                                            {{ order.get_total_cost }} ₽
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                {% if order.promo_code %}
+                                <div class="promo-applied text-muted small mt-2">
+                                    ✅ Применен промокод: <strong>{{ order.promo_code }}</strong>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            {% if order.status == "new" or order.status == "processing" %}
+                            <form method="post" action="{% url 'orders:cancel_order' order.id %}" class="mt-3">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    Отменить заказ
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Нет активных заказов.</p>
+            {% endif %}
+        </div>
+
+        <!-- Архивные заказы -->
+        <div class="tab-pane fade" id="archived" role="tabpanel">
+            {% if archived_orders %}
+                {% for order in archived_orders %}
+                    <div class="card mb-3 border-secondary">
+                        <div class="card-header">
+                            Заказ №{{ order.id }} от {{ order.created|date:"d.m.Y H:i" }}
+                            <span class="badge 
+                                {% if order.status == 'delivered' %} bg-success
+                                {% elif order.status == 'canceled' %} bg-danger
+                                {% endif %}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                {% for item in order.items.all %}
+                                    <li>
+                                        {{ item.product.name }} — {{ item.quantity }} шт. × {{ item.price }} ₽ =
+                                        {{ item.get_cost }} ₽
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            
+                            <!-- БЛОК С ИТОГАМИ СО СКИДКОЙ -->
+                            <div class="order-summary mt-3 p-3 bg-light rounded">
+                                <div class="summary-row d-flex justify-content-between">
+                                    <span>Общая стоимость:</span>
+                                    <span>{{ order.get_total_cost }} ₽</span>
+                                </div>
+                                
+                                {% if order.discount %}
+                                <div class="summary-row d-flex justify-content-between text-success">
+                                    <span>Скидка по промокоду ({{ order.discount }}%):</span>
+                                    <span>-{{ order.get_discount_amount }} ₽</span>
+                                </div>
+                                {% endif %}
+                                
+                                <div class="summary-row d-flex justify-content-between total fw-bold mt-2 pt-2 border-top">
+                                    <span>Итого:</span>
+                                    <span>
+                                        {% if order.total_with_discount %}
+                                            {{ order.total_with_discount }} ₽
+                                        {% else %}
+                                            {{ order.get_total_cost }} ₽
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                {% if order.promo_code %}
+                                <div class="promo-applied text-muted small mt-2">
+                                    ✅ Применен промокод: <strong>{{ order.promo_code }}</strong>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Нет архивных заказов.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .order-card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .order-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .order-item {
+        padding: 6px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 15px;
+    }
+
+    .order-item:last-child {
+        border-bottom: none;
+    }
+
+    .order-item .product-name {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .total-sum {
+        font-size: 16px;
+        color: #222;
+    }
+
+    .card-header {
+        font-size: 15px;
+        background: #fafafa;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .order-summary {
+        background: #f8f9fa !important;
+        border: 1px solid #e9ecef;
+    }
+
+    .summary-row {
+        padding: 3px 0;
+    }
+
+    .summary-row.total {
+        font-size: 18px;
+        color: #ff6a00;
+    }
+</style>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

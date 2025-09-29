@@ -1,0 +1,21 @@
+{
+  "name": "shop-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env PGCLIENTENCODING=UTF8 node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@a2seven/yoo-checkout": "^1.1.4",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "iconv-lite": "^0.6.3",
+    "pg": "^8.16.3",
+    "yookassa": "^0.1.1"
+  },
+  "description": ""
+}
